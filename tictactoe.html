@@ -1,0 +1,178 @@
+<head>
+  <meta charset="utf-8">
+  <title>Tic tac Toe</title>
+  <style type="text/css">
+    h2 {
+      text-align:center;
+      font-size: 30px;
+    }
+    .ttt_board {
+      text-align:center;
+      padding:10px; 
+      width:auto;
+    }
+    .ttt_btn {
+      width: 1em; height: 1em;
+      text-align: center;
+      padding: 0px; margin: 0px;
+      display:inline-block; box-sizing: border-box;
+      font-size: 100px;
+      border: 1px solid black;
+      user-select: none;
+    }
+    .ttt_btn:hover {
+      background-color: darkslategrey;
+    }
+
+  </style>
+  <script language="javascript">
+    //Globals
+    var boxArr = [];
+    var BOARD_SIZE = 0;
+    var WIN_LENGTH = 4;
+    var NO_WIN = true;
+    var player = "X";
+
+    window.onload = function(){
+      buttons = document.querySelectorAll(".ttt_btn");
+      buttons.forEach(function(item){
+        item.addEventListener("click", pressSquare);
+      })
+    }//end Window OnLoad
+
+    //When a Button is Pressed, Come here
+    function pressSquare(){
+      text = document.querySelector(".ttt_text");
+      if (NO_WIN && this.innerText != "X" && this.innerText != "O"){
+        boxArr[this.id] = player;        
+        this.innerText = player;
+
+        //Check for a Win
+        if(checkWin(WIN_LENGTH, BOARD_SIZE, player)){
+          NO_WIN = false;
+          text.innerText = "Player " + player + " Wins!";
+          setTimeout(() => { win(); }, 1000); 
+        }
+
+        //Switch Turn
+        if(NO_WIN){
+          if(player == "X"){
+            player = "O";
+          }
+          else{
+            player = "X";
+          }
+          text.innerText = "Player " + player + "'s Turn"; 
+        }
+
+      }
+    }//End PressSquare
+
+    //Check for a Win Condition (WIN_LENGTH in a Row)
+    function checkWin(winAmt, size, player){
+      let pos = 0;
+      for (let i=1; i <= size; i++){
+        for (let j=1; j <= size; j++){
+          if(boxArr[pos] == player){
+            //If there's a winnable length; Check for a Horizontal or Diagonal Right Win
+            if(pos%size <= size - winAmt){
+              //Horizontal
+              for(let k=1; k < winAmt; k++){
+                if(boxArr[pos+k] != player){
+                  break;
+                }
+                else if (k == winAmt - 1){
+                  return true;
+                }
+              }
+              //Diagonal Left
+              for(let k=1; k < winAmt; k++){
+                let diagonalRight = (k * size) + k
+                if(boxArr[pos+diagonalRight] != player){
+                  break;
+                }
+                else if (k == winAmt -1){
+                  return true;
+                }
+              }
+            }
+            //If There's a winnable length to the left; Check for a Diagonal Left Win
+            if (pos%size >= winAmt - 1){
+              for(let k=1; k < winAmt; k++){
+                let diagonalLeft = (k * size) - k;
+                if(boxArr[pos+diagonalLeft] != player){
+                  break;
+                }
+                else if (k == winAmt -1){
+                  return true;
+                }
+              }
+            }
+            //if not last Row; Check for a vertical win
+            if (pos + size < size*size){
+              for(let k=1; k < winAmt; k++){
+                let squareDown = k * size;
+                if(boxArr[pos+squareDown] != player){
+                  break;
+                }
+                else if (k == winAmt - 1){
+                  return true;
+                }
+              }
+            }
+          }
+          pos++;
+        }
+      }
+      return false;
+    }
+
+    function win(){
+      alert("Player " + player + " Wins!!");
+      NO_WIN = true;
+      resetBoard();
+    }
+    function resetBoard(){
+      buttons = document.querySelectorAll(".ttt_btn");
+      buttons.forEach(function(item){
+        item.innerText = "_"
+      })
+      boxArr = [];
+      text.innerText = "Player " + player + "'s Turn"; 
+    }
+
+
+    // Create the Buttons and populate the button array
+    function makeButtons(size){
+      BOARD_SIZE = size;
+      var btns = "";
+      let arr = [];
+      // Iterate to create a square of size^2
+      var arrPos = 0;
+      for (let i=1; i <= size; i++){
+        for(let j=1; j <= size; j++){
+         let button = "<div class='ttt_btn' id=\"" + arrPos + "\">_</div>"
+         if (j==size){
+           button += "<br />"
+         }
+         arr.push(button);
+         arrPos++;
+        }
+      }
+      arr.forEach(function(item){
+        document.write(item);
+      })
+    }//End MakeButtons
+
+  </script>
+</head>
+<body>
+  <h2>Tic Tac Toe</h2>
+  <div class="ttt_board">
+    <div class="ttt_text">Player X's Turn</div>
+    <script language="javascript">
+      makeButtons(5);
+    </script>
+  </div>
+  <div class="ttt-text"></div>
+</body>
