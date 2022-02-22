@@ -143,7 +143,11 @@
 
 
     // Create the Buttons and populate the button array
-    function makeButtons(size){
+    function makeButtons(){
+      let size = prompt("Board Size?");
+      let winLngth = prompt("Win Length?");
+
+      WIN_LENGTH = winLngth;
       BOARD_SIZE = size;
       var btns = "";
       let arr = [];
@@ -171,7 +175,7 @@
   <div class="ttt_board">
     <div class="ttt_text">Player X's Turn</div>
     <script language="javascript">
-      makeButtons(5);
+      makeButtons();
     </script>
   </div>
   <div class="ttt-text"></div>
